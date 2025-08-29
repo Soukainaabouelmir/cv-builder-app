@@ -16,7 +16,7 @@ function App() {
     aptitudes: []
   });
 
-  // États pour les inputs temporaires
+  
   const [skillInput, setSkillInput] = useState('');
   const [languageInput, setLanguageInput] = useState('');
   const [aptitudeInput, setAptitudeInput] = useState('');
@@ -25,22 +25,22 @@ function App() {
   const [debugInfo, setDebugInfo] = useState([]);
   const [serverStatus, setServerStatus] = useState('unknown');
 
-  // Fonction pour ajouter des infos de debug
+ 
   const addDebugInfo = (info) => {
     setDebugInfo(prev => [...prev, `${new Date().toLocaleTimeString()}: ${info}`]);
   };
 
-  // Gestionnaire de changement pour les champs de base
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Gestion de la photo
+
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Vérifier la taille du fichier (max 5MB)
+    
       if (file.size > 5 * 1024 * 1024) {
         setMessage({ type: 'error', text: 'La photo doit faire moins de 5MB' });
         return;
@@ -57,7 +57,7 @@ function App() {
     }
   };
 
-  // Fonctions pour l'éducation
+
   const handleAddEducation = () => {
     setFormData(prev => ({
       ...prev,
@@ -78,7 +78,7 @@ function App() {
     setFormData(prev => ({ ...prev, education: newEducation }));
   };
 
-  // Fonctions pour l'expérience
+  
   const handleAddExperience = () => {
     setFormData(prev => ({
       ...prev,
@@ -99,7 +99,7 @@ function App() {
     setFormData(prev => ({ ...prev, experience: newExperience }));
   };
 
-  // Fonctions pour les compétences
+  
   const handleAddSkill = () => {
     if (skillInput.trim()) {
       setFormData(prev => ({
@@ -117,7 +117,7 @@ function App() {
     }));
   };
 
-  // Fonctions pour les langues
+  
   const handleAddLanguage = () => {
     if (languageInput.trim()) {
       setFormData(prev => ({
@@ -135,7 +135,7 @@ function App() {
     }));
   };
 
-  // Fonctions pour les aptitudes
+  
   const handleAddAptitude = () => {
     if (aptitudeInput.trim()) {
       setFormData(prev => ({
@@ -153,7 +153,7 @@ function App() {
     }));
   };
 
-  // Fonction pour tester la connexion au serveur
+  
   const testServerConnection = async () => {
     try {
       addDebugInfo('Test de connexion au serveur...');
@@ -179,14 +179,14 @@ function App() {
     }
   };
 
-  // Soumission du formulaire avec gestion d'erreurs améliorée
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsGenerating(true);
     setMessage({ type: '', text: '' });
     setDebugInfo([]);
 
-    // Validation des champs obligatoires
+    
     if (!formData.name.trim()) {
       setMessage({ type: 'error', text: 'Le nom est obligatoire' });
       setIsGenerating(false);
@@ -197,7 +197,7 @@ function App() {
     addDebugInfo(`Nom: ${formData.name}`);
 
     try {
-      // Tester la connexion au serveur d'abord
+      
       const serverAvailable = await testServerConnection();
       if (!serverAvailable) {
         setMessage({ 
@@ -208,7 +208,7 @@ function App() {
         return;
       }
 
-      // Nettoyer les données avant envoi
+      
       const cleanedData = {
         ...formData,
         education: formData.education.filter(edu => 
@@ -222,7 +222,7 @@ function App() {
       addDebugInfo(`Données nettoyées: ${cleanedData.education.length} formations, ${cleanedData.experience.length} expériences`);
       addDebugInfo(`Compétences: ${cleanedData.skills.length}, Langues: ${cleanedData.languages.length}, Aptitudes: ${cleanedData.aptitudes.length}`);
 
-      // Préparer les données pour l'envoi (sans la photo trop lourde dans les logs)
+      
       const dataToLog = { ...cleanedData };
       if (dataToLog.photo) {
         dataToLog.photo = `[Photo base64: ${dataToLog.photo.substring(0, 50)}...]`;
@@ -242,7 +242,7 @@ function App() {
       addDebugInfo(`Réponse serveur: ${response.status} ${response.statusText}`);
 
       if (response.ok) {
-        // Vérifier le type de contenu
+       
         const contentType = response.headers.get('content-type');
         addDebugInfo(`Type de contenu: ${contentType}`);
 
@@ -253,7 +253,6 @@ function App() {
           throw new Error('Le fichier PDF généré est vide');
         }
 
-        // Créer l'URL et télécharger
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -264,7 +263,6 @@ function App() {
         
         addDebugInfo('Téléchargement initié');
         
-        // Nettoyer
         setTimeout(() => {
           document.body.removeChild(a);
           window.URL.revokeObjectURL(url);
@@ -273,7 +271,7 @@ function App() {
 
         setMessage({ type: 'success', text: 'CV généré et téléchargé avec succès !' });
       } else {
-        // Lire le message d'erreur du serveur
+   
         const errorText = await response.text();
         addDebugInfo(`Erreur serveur: ${errorText}`);
         
@@ -407,7 +405,7 @@ function App() {
           </div> */}
         </div>
 
-        {/* Messages d'état */}
+        
         {message.text && (
           <div className={`mb-6 p-4 rounded-lg flex items-center gap-2 ${
             message.type === 'error' 
@@ -432,7 +430,7 @@ function App() {
         )} */}
 
         <form onSubmit={handleSubmit}>
-          <div className="space-y-6">
+          <div className="space-y-6 ">
             
             <div className="bg-white p-6 rounded-lg shadow-md mb-6">
               <div className="flex items-center gap-3 mb-4">

@@ -9,8 +9,8 @@ import traceback
 
 app = Flask(__name__)
 CORS(app, resources={
-    r"/generate-cv": {"origins": ["http://localhost:3001"]},
-    r"/health": {"origins": ["http://localhost:3001"]}
+    r"/generate-cv": {"origins": ["http://localhost:3000"]},
+    r"/health": {"origins": ["http://localhost:3000"]}
 })
 
 UPLOAD_FOLDER = 'generated_cvs'
@@ -100,11 +100,10 @@ class ModernCanvaPDF(FPDF):
             self.set_text_color(240, 240, 240)
             self.cell(0, 8, title.encode('latin-1', 'replace').decode('latin-1'))
         
-      
         contact_y = start_y + 25
         self.set_font('Arial', '', 9)
         self.set_text_color(230, 230, 230)
-        
+
         contacts = []
         if email:
             contacts.append(f"@ {email}")
@@ -134,8 +133,6 @@ class ModernCanvaPDF(FPDF):
         self.set_text_color(*self.primary_color)
         section_title = f"{icon} {title}" if icon else title
         self.cell(0, 8, section_title.encode('latin-1', 'replace').decode('latin-1'))
-        
-      
         self.set_draw_color(*self.accent_color)
         self.set_line_width(0.5)
         self.line(18, current_y + 10, 190, current_y + 10)
@@ -162,7 +159,6 @@ class ModernCanvaPDF(FPDF):
             
         self.cell(0, 6, title_text.encode('latin-1', 'replace').decode('latin-1'))
         
-
         if period:
             self.set_xy(20, current_y + 6)
             self.set_font('Arial', 'I', 9)
@@ -309,7 +305,7 @@ def generate_cv():
                               any(exp.get(field, '').strip() for field in ['position', 'company', 'start', 'end'])]
             
             if valid_experience:
-                pdf.add_modern_section('EXPÉRIENCE PROFESSIONNELLE', '💼')
+                pdf.add_modern_section('EXPÉRIENCE PROFESSIONNELLE', '')
                 
                 for exp in valid_experience:
                     position = exp.get('position', '').strip()
@@ -334,7 +330,7 @@ def generate_cv():
                              any(edu.get(field, '').strip() for field in ['degree', 'school', 'year'])]
             
             if valid_education:
-                pdf.add_modern_section('FORMATION', '🎓')
+                pdf.add_modern_section('FORMATION', '')
                 
                 for edu in valid_education:
                     pdf.add_education_item(
@@ -346,18 +342,18 @@ def generate_cv():
 
         skills_data = data.get('skills', [])
         if skills_data and isinstance(skills_data, list) and skills_data:
-            pdf.add_modern_section('COMPÉTENCES', '⚡')
+            pdf.add_modern_section('COMPÉTENCES', '')
             pdf.add_skills_grid(skills_data)
         
         languages_data = data.get('languages', [])
         if languages_data and isinstance(languages_data, list) and languages_data:
-            pdf.add_modern_section('LANGUES', '🌍')
+            pdf.add_modern_section('LANGUES', '')
             pdf.add_skills_grid(languages_data, columns=2)
         
 
         aptitudes_data = data.get('aptitudes', [])
         if aptitudes_data and isinstance(aptitudes_data, list) and aptitudes_data:
-            pdf.add_modern_section('APTITUDES', '⭐')
+            pdf.add_modern_section('APTITUDES', '')
             pdf.add_skills_grid(aptitudes_data, columns=2)
         
         filename = f"cv_moderne_{name.replace(' ', '_').lower()}.pdf"
